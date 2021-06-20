@@ -59,7 +59,7 @@
                     <options>
                         <!-- 服务器的ip,账号,密码 -->
                         <option>
-                            10.10.10.113,root,123456
+                            192.168.40.131,root,root!Q2w
                         </option>
                     </options>
                 </configuration>

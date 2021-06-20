@@ -57,11 +57,14 @@ public class DockerContainer {
         this.status = dockerContainers[4];
         // 表示当前的程序已经停止了
         if(this.status.indexOf(DockerCommands.DOCKER_CONTAINER_STATUS_EXITED)!=-1){
-            this.names = dockerContainers[5];
+            this.names = dockerContainers[dockerContainers.length-1];
         }else{
-            this.ports = dockerContainers[5];
-            this.names = dockerContainers[6];
+            if(dockerContainers.length>=6){
+                this.ports = dockerContainers[5];
+            }
+            this.names = dockerContainers[dockerContainers.length-1];
         }
+
     }
 
     public String getContainerId() {
