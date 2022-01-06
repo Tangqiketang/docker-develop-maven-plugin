@@ -89,6 +89,14 @@ public class DockerMavenPluginApplication extends AbstractMojo {
     @Parameter(property = "netType")
     private String netType;
 
+    @Parameter(property = "dockerServerLocation")
+    private String dockerServerLocation;
+
+    /**
+     * 是否将编译的镜像推送到docker服务器上
+     */
+    @Parameter(property = "pushImageToDockerHub")
+    private boolean pushImageToDockerHub =false;
 
     @Override
     public void execute() throws MojoFailureException {
@@ -179,6 +187,7 @@ public class DockerMavenPluginApplication extends AbstractMojo {
             String dockerFile = dockerFilePath.split("/")[dockerFilePath.split("/").length - 1];
             // 创建镜像
             SshResult sshResult = DockerManage.dockerBuild(conn, imagesHeadName, dockerImagesPath, dockerFile);
+            log.info("创建镜像结果:{},msg:{}",sshResult.isSuccess(),sshResult.getMsg());
             // 镜像创建成功，才可以启动容器
             if (sshResult.isSuccess()) {
                 DockerRun dockerRun;
@@ -196,6 +205,15 @@ public class DockerMavenPluginApplication extends AbstractMojo {
                 }
             } else {
                 log.info("镜像创建失败，失败原因：{}", sshResult.getMsg());
+            }
+
+            //推送镜像到服务器
+            if(pushImageToDockerHub){
+                log.info("开始将镜像推送到docker私服");
+                if(null!=dockerServerLocation&&!"".equals(dockerServerLocation)){
+                    String pushResult=LinuxManage.execute(conn, "docker tag "+imagesHeadName+" "+dockerServerLocation+"/"+imagesHeadName+";docker push "+dockerServerLocation+"/"+imagesHeadName);
+                    log.info("推送镜像结果:"+pushResult);
+                }
             }
         }
     }
