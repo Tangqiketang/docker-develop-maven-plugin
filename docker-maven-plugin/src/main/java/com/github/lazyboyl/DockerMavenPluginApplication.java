@@ -138,7 +138,7 @@ public class DockerMavenPluginApplication extends AbstractMojo {
                 throw new MojoFailureException("登录失败！失败原因：请确定账号密码以及IP地址是否正确！");
             }
             // 实现文件的重命名,同时删除旧的文件
-            LinuxManage.execute(conn, "cd " + dockerImagesPath + ";rm -rf " + jarRename + "; mv " + jarName + " " + jarRename);
+            LinuxManage.execute(conn, "cd " + dockerImagesPath + ";rm -rf " + jarRename + "; mv " + jarName + " " + jarRename+";rm  -f *.jar ");
             // 上传文件
             SshUploadFileUtil sshUploadFileUtil = new SshUploadFileUtil();
             File file = new File(jarTargetPath);
